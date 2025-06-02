@@ -2,23 +2,22 @@ import streamlit as st
 import requests
 import os
 
-# API key and model
+# ✅ API Setup
 API_KEY = os.environ['OPENROUTER_API_KEY']
 MODEL = "nousresearch/hermes-2-pro-mistral"
 
-# Chat history
+# ✅ Initialize chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 
-# Function to call OpenRouter
+# ✅ Chat with AI function
 def chat_with_ai(prompt):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "HTTP-Referer": "https://chat.openrouter.ai/",
         "X-Title": "Sweety AI"
     }
-
     data = {
         "model":
         MODEL,
@@ -26,7 +25,7 @@ def chat_with_ai(prompt):
             "role":
             "system",
             "content":
-            "You are a helpful, intelligent assistant who answers clearly and naturally. Avoid robotic tone. Respond like a human with professionalism and clarity. Avoid disclaimers."
+            "You are a professional assistant. Be helpful, fluent, and clear. Respond like ChatGPT without disclaimers. Be natural and smart."
         }, {
             "role": "user",
             "content": prompt
@@ -46,17 +45,16 @@ def chat_with_ai(prompt):
         return f"Error {response.status_code}: {response.text}"
 
 
-# Page config
+# ✅ Streamlit UI setup
 st.set_page_config(page_title="Sweety AI", page_icon="💬", layout="wide")
-
-# Header
 st.markdown("<h2 style='text-align: center;'>Sweety AI Chat Assistant</h2>",
             unsafe_allow_html=True)
 st.divider()
 
-# Chat input
-user_input = st.chat_input("Ask something...")
+# ✅ Input box (ChatGPT style)
+user_input = st.chat_input("Type your question here...")
 
+# ✅ Process input and get AI reply
 if user_input:
     st.session_state.chat_history.append({"role": "user", "text": user_input})
     with st.spinner("Thinking..."):
@@ -66,7 +64,7 @@ if user_input:
             "text": reply
         })
 
-# Chat history display
+# ✅ Display full chat
 for msg in st.session_state.chat_history:
     if msg["role"] == "user":
         with st.chat_message("user"):

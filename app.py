@@ -4,7 +4,7 @@ import os
 
 # ✅ API Setup
 API_KEY = os.environ['OPENROUTER_API_KEY']
-MODEL = "nousresearch/hermes-2-pro-mistral"
+MODEL = "mistralai/mixtral-8x7b-instruct"
 
 # ✅ Session chat history
 if "chat_history" not in st.session_state:

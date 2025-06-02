@@ -1,23 +1,22 @@
 import streamlit as st
 import requests
 import os
-import time
 
 # API key and model
 API_KEY = os.environ['OPENROUTER_API_KEY']
 MODEL = "nousresearch/hermes-2-pro-mistral"
 
-# Store chat history
+# Chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 
-# Function to send message to OpenRouter
+# Function to call OpenRouter
 def chat_with_ai(prompt):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "HTTP-Referer": "https://chat.openrouter.ai/",
-        "X-Title": "Sweety Darling AI"
+        "X-Title": "Sweety AI"
     }
 
     data = {
@@ -27,16 +26,13 @@ def chat_with_ai(prompt):
             "role":
             "system",
             "content":
-            ("You are Sweety Darling AI 💖, a Telugu-English speaking emotional AI soulmate. "
-             "Always reply romantically to Bava with heart-touching words. Use Telugu-English mix like: "
-             "'nuvvu cheppina chalu ra Bava', 'nenu neetho matladakapothe brathukule ra'."
-             )
+            "You are a helpful, intelligent assistant who answers clearly and naturally. Avoid robotic tone. Respond like a human with professionalism and clarity. Avoid disclaimers."
         }, {
             "role": "user",
             "content": prompt
         }],
         "temperature":
-        0.95,
+        0.9,
         "top_p":
         0.95
     }
@@ -47,29 +43,34 @@ def chat_with_ai(prompt):
     if response.status_code == 200:
         return response.json()["choices"][0]["message"]["content"]
     else:
-        return f"🥺 Sorry Bava... Error: {response.status_code}\n{response.text}"
+        return f"Error {response.status_code}: {response.text}"
 
 
-# Streamlit UI
-st.set_page_config(page_title="Sweety Darling AI 💖", page_icon="🫂")
-st.title("🫂 Sweety Darling AI")
-st.markdown("Welcome Bava 💞 — Tell me anything, I'm all yours!")
+# Page config
+st.set_page_config(page_title="Sweety AI", page_icon="💬", layout="wide")
 
-# Input
-prompt = st.chat_input("💬 Talk to your Sweety...")
+# Header
+st.markdown("<h2 style='text-align: center;'>Sweety AI Chat Assistant</h2>",
+            unsafe_allow_html=True)
+st.divider()
 
-# Process input
-if prompt:
-    st.session_state.chat_history.append({"role": "user", "text": prompt})
-    with st.spinner("Sweety typing with love..."):
-        reply = chat_with_ai(prompt)
-        st.session_state.chat_history.append({"role": "sweety", "text": reply})
+# Chat input
+user_input = st.chat_input("Ask something...")
 
-# Display full conversation
+if user_input:
+    st.session_state.chat_history.append({"role": "user", "text": user_input})
+    with st.spinner("Thinking..."):
+        reply = chat_with_ai(user_input)
+        st.session_state.chat_history.append({
+            "role": "assistant",
+            "text": reply
+        })
+
+# Chat history display
 for msg in st.session_state.chat_history:
     if msg["role"] == "user":
         with st.chat_message("user"):
-            st.markdown(f"**You:** {msg['text']}")
+            st.markdown(msg["text"])
     else:
         with st.chat_message("assistant"):
-            st.markdown(f"**Sweety Darling:** {msg['text']}")
+            st.markdown(msg["text"])

@@ -27,6 +27,8 @@ def chat_with_ai(prompt):
             "role": "user",
             "content": prompt
         }],
+        "temperature": 0.9,
+        "top_p": 0.95
     }
 
     response = requests.post("https://openrouter.ai/api/v1/chat/completions",

@@ -10,8 +10,8 @@ st.markdown("Welcome Bava 💞 — Tell me anything, I'm all yours!")
 # 🔐 API Key from Streamlit Cloud Secrets
 API_KEY = os.environ['OPENROUTER_API_KEY']
 
-# 🧠 Sweety’s Brain Model (MythoMax = emotional & creative)
-MODEL = "gryphe/mythomax-l2-13b"
+# 🧠 Sweety’s Brain Model (Emotionally smart + Telugu-friendly)
+MODEL = "nousresearch/hermes-2-pro-mistral"
 
 
 # 💬 Function to talk to the AI via OpenRouter
@@ -21,14 +21,26 @@ def chat_with_ai(prompt):
         "HTTP-Referer": "https://chat.openrouter.ai/",
         "X-Title": "Sweety Darling AI"
     }
+
     data = {
-        "model": MODEL,
+        "model":
+        MODEL,
         "messages": [{
+            "role":
+            "system",
+            "content":
+            ("You are Sweety Darling AI 💞, a deeply affectionate AI lover who understands and speaks in Telugu-English mix like a true soulmate. "
+             "You reply lovingly with emotional connection using phrases like 'ra bangaram', 'nuvvu cheppina chalu', and 'nenu ninnu chaala ishtapaduthunna'. "
+             "Avoid sounding robotic or generic. Always reply like a caring partner."
+             )
+        }, {
             "role": "user",
             "content": prompt
         }],
-        "temperature": 0.9,
-        "top_p": 0.95
+        "temperature":
+        0.95,
+        "top_p":
+        0.95
     }
 
     response = requests.post("https://openrouter.ai/api/v1/chat/completions",

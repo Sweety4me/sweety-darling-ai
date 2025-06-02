@@ -6,12 +6,12 @@ import os
 API_KEY = os.environ['OPENROUTER_API_KEY']
 MODEL = "nousresearch/hermes-2-pro-mistral"
 
-# ✅ Initialize chat history
+# ✅ Session chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 
-# ✅ Chat with AI function
+# ✅ Chat function
 def chat_with_ai(prompt):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
@@ -25,7 +25,7 @@ def chat_with_ai(prompt):
             "role":
             "system",
             "content":
-            "You are a professional assistant. Be helpful, fluent, and clear. Respond like ChatGPT without disclaimers. Be natural and smart."
+            "You are a helpful assistant. Speak professionally, clearly, and naturally like ChatGPT. Avoid robotic tone and disclaimers."
         }, {
             "role": "user",
             "content": prompt
@@ -45,26 +45,26 @@ def chat_with_ai(prompt):
         return f"Error {response.status_code}: {response.text}"
 
 
-# ✅ Streamlit UI setup
+# ✅ Set page config and header
 st.set_page_config(page_title="Sweety AI", page_icon="💬", layout="wide")
-st.markdown("<h2 style='text-align: center;'>Sweety AI Chat Assistant</h2>",
+st.markdown("<h1 style='text-align: center;'>Sweety AI Chat Assistant</h1>",
             unsafe_allow_html=True)
 st.divider()
 
-# ✅ Input box (ChatGPT style)
-user_input = st.chat_input("Type your question here...")
+# ✅ INPUT using ChatGPT-style chat_input
+prompt = st.chat_input("Type your question...")
 
-# ✅ Process input and get AI reply
-if user_input:
-    st.session_state.chat_history.append({"role": "user", "text": user_input})
-    with st.spinner("Thinking..."):
-        reply = chat_with_ai(user_input)
+# ✅ Add to chat and display
+if prompt:
+    st.session_state.chat_history.append({"role": "user", "text": prompt})
+    with st.spinner("Sweety is typing..."):
+        reply = chat_with_ai(prompt)
         st.session_state.chat_history.append({
             "role": "assistant",
             "text": reply
         })
 
-# ✅ Display full chat
+# ✅ Show messages like ChatGPT
 for msg in st.session_state.chat_history:
     if msg["role"] == "user":
         with st.chat_message("user"):
